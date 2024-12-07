@@ -1,4 +1,4 @@
-# SQl Prac
+# SQL Prac
 
 ### 1. **Introduction to SQL**
 - **What is SQL?**  

@@ -327,6 +327,208 @@ CREATE INDEX idx_salary ON Employees(Salary);
 - Speeds up queries filtering by `Salary`.
 
 
+---
+
+
+## Complex Problem Statements
+
+Here are some complex SQL queries designed to help sharpen your SQL skills. These queries cover advanced concepts such as subqueries, joins, window functions, recursive queries, and aggregation.
+
+---
+
+### **1. Find the Second Highest Salary in a Table**
+**Problem:** Retrieve the second-highest salary from the `Employees` table.
+
+**Query:**
+```sql
+SELECT MAX(Salary) AS SecondHighestSalary
+FROM Employees
+WHERE Salary < (SELECT MAX(Salary) FROM Employees);
+```
+**Explanation:**  
+- The inner query finds the maximum salary.  
+- The outer query retrieves the highest salary below the maximum.
+
+---
+
+### **2. Find Departments with More Than 5 Employees**
+**Problem:** List department names where more than 5 employees work.
+
+**Query:**
+```sql
+SELECT D.DepartmentName, COUNT(E.EmployeeID) AS EmployeeCount
+FROM Employees E
+JOIN Departments D ON E.DepartmentID = D.DepartmentID
+GROUP BY D.DepartmentName
+HAVING COUNT(E.EmployeeID) > 5;
+```
+**Explanation:**  
+- `JOIN` links employees to their departments.  
+- `GROUP BY` groups by department.  
+- `HAVING` filters groups with more than 5 employees.
+
+---
+
+### **3. Retrieve Employees With a Salary Greater Than Their Department's Average**
+**Problem:** List employees earning above the average salary of their respective departments.
+
+**Query:**
+```sql
+SELECT E.Name, E.Salary, E.DepartmentID
+FROM Employees E
+WHERE E.Salary > (
+    SELECT AVG(Salary)
+    FROM Employees
+    WHERE DepartmentID = E.DepartmentID
+);
+```
+**Explanation:**  
+- The subquery calculates the average salary for each department.  
+- The outer query compares each employee's salary with their department's average.
+
+---
+
+### **4. Identify Duplicate Records in a Table**
+**Problem:** Find duplicate employee names in the `Employees` table.
+
+**Query:**
+```sql
+SELECT Name, COUNT(*)
+FROM Employees
+GROUP BY Name
+HAVING COUNT(*) > 1;
+```
+**Explanation:**  
+- Groups rows by `Name`.  
+- `HAVING COUNT(*) > 1` filters names that appear more than once.
+
+---
+
+### **5. Retrieve Top 3 Salaries in Each Department**
+**Problem:** Rank employees by salary within each department and retrieve the top 3.
+
+**Query:**
+```sql
+SELECT Name, DepartmentID, Salary
+FROM (
+    SELECT Name, DepartmentID, Salary,
+           RANK() OVER (PARTITION BY DepartmentID ORDER BY Salary DESC) AS Rank
+    FROM Employees
+) Ranked
+WHERE Rank <= 3;
+```
+**Explanation:**  
+- `RANK()` assigns a rank to employees within each department based on salary.  
+- The outer query filters rows where the rank is less than or equal to 3.
+
+---
+
+### **6. Find Employees Reporting to the Same Manager**
+**Problem:** List pairs of employees who share the same manager.
+
+**Query:**
+```sql
+SELECT E1.Name AS Employee1, E2.Name AS Employee2, E1.ManagerID
+FROM Employees E1
+JOIN Employees E2 ON E1.ManagerID = E2.ManagerID
+WHERE E1.EmployeeID < E2.EmployeeID;
+```
+**Explanation:**  
+- Self-join matches employees with the same `ManagerID`.  
+- `E1.EmployeeID < E2.EmployeeID` ensures no duplicate pairs.
+
+---
+
+### **7. Recursive Query: Find an Employee Hierarchy**
+**Problem:** Display the hierarchy of employees starting from the CEO.
+
+**Query:**
+```sql
+WITH RECURSIVE EmployeeHierarchy AS (
+    SELECT EmployeeID, Name, ManagerID
+    FROM Employees
+    WHERE ManagerID IS NULL
+    UNION ALL
+    SELECT E.EmployeeID, E.Name, E.ManagerID
+    FROM Employees E
+    INNER JOIN EmployeeHierarchy EH ON E.ManagerID = EH.EmployeeID
+)
+SELECT * FROM EmployeeHierarchy;
+```
+**Explanation:**  
+- The recursive query starts with the CEO (no manager).  
+- It then finds employees reporting to each level of the hierarchy.
+
+---
+
+### **8. Identify Gaps in Sequential Data**
+**Problem:** Find missing order numbers in a sequence from the `Orders` table.
+
+**Query:**
+```sql
+SELECT O1.OrderNo + 1 AS MissingOrderNo
+FROM Orders O1
+LEFT JOIN Orders O2 ON O1.OrderNo + 1 = O2.OrderNo
+WHERE O2.OrderNo IS NULL;
+```
+**Explanation:**  
+- Checks for gaps by joining `OrderNo` + 1 in one table to `OrderNo` in another.  
+- Filters where no match is found.
+
+---
+
+### **9. Count Employees With the Same Job Title in a Department**
+**Problem:** Count employees with the same job title within each department.
+
+**Query:**
+```sql
+SELECT DepartmentID, JobTitle, COUNT(*) AS EmployeeCount
+FROM Employees
+GROUP BY DepartmentID, JobTitle
+HAVING COUNT(*) > 1;
+```
+**Explanation:**  
+- Groups data by department and job title.  
+- `HAVING` ensures only groups with more than one employee are shown.
+
+---
+
+### **10. Compare Monthly Sales Between Two Years**
+**Problem:** Compare monthly sales for 2023 and 2024.
+
+**Query:**
+```sql
+SELECT EXTRACT(MONTH FROM SaleDate) AS Month, 
+       SUM(CASE WHEN EXTRACT(YEAR FROM SaleDate) = 2023 THEN Amount ELSE 0 END) AS Sales2023,
+       SUM(CASE WHEN EXTRACT(YEAR FROM SaleDate) = 2024 THEN Amount ELSE 0 END) AS Sales2024
+FROM Sales
+GROUP BY EXTRACT(MONTH FROM SaleDate);
+```
+**Explanation:**  
+- Extracts the month from `SaleDate` for grouping.  
+- Conditional aggregation sums sales separately for 2023 and 2024.
+
+---
+
+### **11. Retrieve Employees Without Managers in Their Department**
+**Problem:** List employees who do not have a manager in their department.
+
+**Query:**
+```sql
+SELECT E.Name, E.DepartmentID
+FROM Employees E
+WHERE E.ManagerID NOT IN (
+    SELECT EmployeeID
+    FROM Employees
+    WHERE DepartmentID = E.DepartmentID
+);
+```
+**Explanation:**  
+- Subquery finds all managers in each department.  
+- Outer query filters employees whose `ManagerID` is not in this list.
+
+
+
 
 
 

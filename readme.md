@@ -55,6 +55,30 @@
   );
   ```
 
+ #### Adding primary key after by altering the table
+
+ ```sql
+ALTER TABLE TableName
+ADD CONSTRAINT ConstraintName PRIMARY KEY (ColumnName);
+ ``` 
+
+`Setting auto increment`
+
+```sql
+CREATE TABLE Employees (
+    EmployeeID INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(100)
+) AUTO_INCREMENT = 200; -- Starts from 200
+
+```
+
+`OR - Alter after creating the column`
+
+```sql
+ALTER TABLE Employees AUTO_INCREMENT = 200;
+```
+
+
 - **Modify Table (Add/Drop Columns)**
   ```sql
   ALTER TABLE TableName ADD ColumnName DataType;

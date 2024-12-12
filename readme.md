@@ -1001,6 +1001,260 @@ WHERE E.ManagerID NOT IN (
 
 
 
+---
+
+# Windows Functions Comprehensive
+
+
+### **Comprehensive Guide to Window Functions in SQL**
+
+#### **Overview of Window Functions**
+Window functions allow you to perform calculations across a set of table rows that are related to the current row. Unlike aggregate functions, window functions do not group the result set. Instead, they perform calculations across a "window" of rows.
+
+Window functions are often used for tasks like ranking, cumulative totals, moving averages, and more. 
+
+---
+
+### **Basic Syntax of Window Functions**
+```sql
+<window_function> OVER (
+  [PARTITION BY partition_columns]
+  [ORDER BY order_columns]
+  [ROWS window_specification]
+)
+```
+
+- **`<window_function>`**: This is the specific window function, such as `RANK()`, `ROW_NUMBER()`, `SUM()`, etc.
+- **`PARTITION BY`**: Divides the result set into partitions (groups of rows) to which the window function will be applied.
+- **`ORDER BY`**: Orders rows within each partition.
+- **`ROWS`**: Defines a window frame (optional), e.g., to define a specific range of rows for the calculation.
+
+---
+
+### **Types of Window Functions**
+
+1. **Ranking Functions**
+   - These functions assign a rank to each row within the result set, based on the specified order.
+   
+   - **ROW_NUMBER()**: Assigns a unique number to each row.
+   - **RANK()**: Assigns a rank to rows with ties, but the next rank(s) are skipped.
+   - **DENSE_RANK()**: Similar to `RANK()`, but no gaps are left in ranks.
+   - **NTILE(n)**: Divides the result set into `n` buckets and assigns a bucket number to each row.
+
+2. **Aggregate Functions**
+   - These functions compute aggregated values but over a defined window (as opposed to summarizing the entire result set).
+   
+   - **SUM()**: Calculates the sum of a window of rows.
+   - **AVG()**: Calculates the average of a window of rows.
+   - **MIN()**: Returns the minimum value in the window.
+   - **MAX()**: Returns the maximum value in the window.
+   - **COUNT()**: Returns the count of rows in the window.
+
+3. **Value Functions**
+   - These functions return specific values for a window frame.
+   
+   - **LEAD()**: Returns the value of the next row.
+   - **LAG()**: Returns the value of the previous row.
+   - **FIRST_VALUE()**: Returns the first value in the window.
+   - **LAST_VALUE()**: Returns the last value in the window.
+
+---
+
+### **Examples of Window Functions**
+
+#### **1. `ROW_NUMBER()`**
+Assigns a unique row number to each row in the result set.
+
+**Query:**
+```sql
+SELECT Name, DepartmentID, Salary,
+       ROW_NUMBER() OVER (PARTITION BY DepartmentID ORDER BY Salary DESC) AS RowNum
+FROM Employees;
+```
+
+**Explanation:**
+- `ROW_NUMBER()` assigns a unique sequential number within each department (`PARTITION BY DepartmentID`), ordered by `Salary` in descending order.
+
+**Sample Table (`Employees`):**
+| Name    | DepartmentID | Salary |
+|---------|--------------|--------|
+| Alice   | 1            | 50000  |
+| Bob     | 1            | 70000  |
+| Charlie | 1            | 70000  |
+| David   | 2            | 40000  |
+| Eva     | 2            | 60000  |
+| Frank   | 2            | 50000  |
+
+**Output:**
+| Name    | DepartmentID | Salary | RowNum |
+|---------|--------------|--------|--------|
+| Bob     | 1            | 70000  | 1      |
+| Charlie | 1            | 70000  | 2      |
+| Alice   | 1            | 50000  | 3      |
+| Eva     | 2            | 60000  | 1      |
+| Frank   | 2            | 50000  | 2      |
+| David   | 2            | 40000  | 3      |
+
+---
+
+#### **2. `RANK()`**
+Assigns a rank to each row, skipping ranks in case of ties.
+
+**Query:**
+```sql
+SELECT Name, DepartmentID, Salary,
+       RANK() OVER (PARTITION BY DepartmentID ORDER BY Salary DESC) AS Rank
+FROM Employees;
+```
+
+**Explanation:**
+- `RANK()` assigns the same rank to rows with the same salary and skips the next rank.
+
+**Output:**
+| Name    | DepartmentID | Salary | Rank |
+|---------|--------------|--------|------|
+| Bob     | 1            | 70000  | 1    |
+| Charlie | 1            | 70000  | 1    |
+| Alice   | 1            | 50000  | 3    |
+| Eva     | 2            | 60000  | 1    |
+| Frank   | 2            | 50000  | 2    |
+| David   | 2            | 40000  | 3    |
+
+---
+
+#### **3. `DENSE_RANK()`**
+Similar to `RANK()`, but no gaps are left in the ranks.
+
+**Query:**
+```sql
+SELECT Name, DepartmentID, Salary,
+       DENSE_RANK() OVER (PARTITION BY DepartmentID ORDER BY Salary DESC) AS DenseRank
+FROM Employees;
+```
+
+**Explanation:**
+- `DENSE_RANK()` assigns the same rank to rows with the same salary but without skipping any ranks.
+
+**Output:**
+| Name    | DepartmentID | Salary | DenseRank |
+|---------|--------------|--------|-----------|
+| Bob     | 1            | 70000  | 1         |
+| Charlie | 1            | 70000  | 1         |
+| Alice   | 1            | 50000  | 2         |
+| Eva     | 2            | 60000  | 1         |
+| Frank   | 2            | 50000  | 2         |
+| David   | 2            | 40000  | 3         |
+
+---
+
+#### **4. `NTILE()`**
+Divides the result set into `n` buckets and assigns a bucket number.
+
+**Query:**
+```sql
+SELECT Name, DepartmentID, Salary,
+       NTILE(3) OVER (PARTITION BY DepartmentID ORDER BY Salary DESC) AS Quartile
+FROM Employees;
+```
+
+**Explanation:**
+- `NTILE(3)` divides the rows within each department into 3 roughly equal groups (quartiles).
+
+**Output:**
+| Name    | DepartmentID | Salary | Quartile |
+|---------|--------------|--------|----------|
+| Bob     | 1            | 70000  | 1        |
+| Charlie | 1            | 70000  | 1        |
+| Alice   | 1            | 50000  | 2        |
+| Eva     | 2            | 60000  | 1        |
+| Frank   | 2            | 50000  | 2        |
+| David   | 2            | 40000  | 3        |
+
+---
+
+#### **5. `LEAD()`**
+Returns the value of the next row in the result set.
+
+**Query:**
+```sql
+SELECT Name, Salary,
+       LEAD(Salary, 1) OVER (ORDER BY Salary DESC) AS NextSalary
+FROM Employees;
+```
+
+**Explanation:**
+- `LEAD(Salary, 1)` returns the salary of the next employee (ordered by `Salary DESC`).
+
+**Output:**
+| Name    | Salary | NextSalary |
+|---------|--------|------------|
+| Bob     | 70000  | 70000      |
+| Charlie | 70000  | 50000      |
+| Alice   | 50000  | 40000      |
+| Eva     | 60000  | 50000      |
+| Frank   | 50000  | 40000      |
+| David   | 40000  | NULL       |
+
+---
+
+#### **6. `LAG()`**
+Returns the value of the previous row in the result set.
+
+**Query:**
+```sql
+SELECT Name, Salary,
+       LAG(Salary, 1) OVER (ORDER BY Salary DESC) AS PrevSalary
+FROM Employees;
+```
+
+**Explanation:**
+- `LAG(Salary, 1)` returns the salary of the previous employee (ordered by `Salary DESC`).
+
+**Output:**
+| Name    | Salary | PrevSalary |
+|---------|--------|------------|
+| Bob     | 70000  | NULL       |
+| Charlie | 70000  | 70000      |
+| Alice   | 50000  | 70000      |
+| Eva     | 60000  | 50000      |
+| Frank   | 50000  | 60000      |
+| David   | 40000  | 50000      |
+
+---
+
+#### **7. `FIRST_VALUE()` and `LAST_VALUE()`**
+Returns the first or last value in the window.
+
+**Query:**
+```sql
+SELECT Name, Salary,
+       FIRST_VALUE(Salary) OVER (PARTITION BY DepartmentID ORDER BY Salary DESC) AS FirstSalary,
+       LAST_VALUE(Salary) OVER (PARTITION BY DepartmentID ORDER BY Salary DESC ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS LastSalary
+FROM Employees;
+```
+
+**Explanation:**
+- `FIRST_VALUE(Salary)` returns the first salary value in the department (after sorting).
+- `LAST_VALUE(Salary)` returns the last salary value in the department.
+
+**Output:**
+| Name    | Salary | FirstSalary | LastSalary |
+|---------|--------|-------------|------------|
+| Bob     | 70000  | 70000       | 50000      |
+| Charlie | 70000  | 70000       | 50000      |
+| Alice   | 50000  | 70000       | 50000      |
+| Eva     | 60000  | 60000       | 40000      |
+| Frank   | 50000  | 60000       | 40000      |
+| David   | 40000  | 60000       | 40000      |
+
+---
+
+### **Conclusion**
+- **Window Functions** allow for advanced data analysis within SQL without collapsing the result set (as with aggregates).
+- Key functions include `RANK()`, `ROW_NUMBER()`, `LEAD()`, `LAG()`, `SUM()`, `AVG()`, and others.
+- Window functions can partition data (`PARTITION BY`), order it (`ORDER BY`), and define the window frame (`ROWS`).
+
+
 
 
 

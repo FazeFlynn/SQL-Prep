@@ -100,6 +100,44 @@ ALTER TABLE Employees AUTO_INCREMENT = 200;
 
 ---
 
+<!-- ================================================================================= -->
+
+#### Renaming tables and columns
+
+- **Using `RENAME TABLE` (in MySQL):**
+```sql
+RENAME TABLE old_table_name TO new_table_name;
+```
+
+- **Using `ALTER TABLE` (in PostgreSQL and MySQL):**
+```sql
+ALTER TABLE old_table_name RENAME TO new_table_name;
+```
+`Renaming Columns`
+
+To rename columns in SQL, the process can differ slightly between different database systems. Below are the methods for renaming columns in some common relational databases:
+
+---
+
+### **1. Renaming a Column**
+
+**Syntax:**
+```sql
+ALTER TABLE table_name CHANGE old_column_name new_column_name column_definition;
+```
+- `column_definition` must include the data type of the column.
+
+#### **Example:**
+If you have a table `students` and want to rename the column `studID` to `studentID`:
+```sql
+ALTER TABLE students CHANGE studID studentID INT;
+```
+- **Important**: You need to specify the column’s data type (`INT` in this example) while renaming the column.
+
+
+<!-- =========================================================================== -->
+---
+
 ### **3. Data (Record) Operations**
 #### **Definition:** SQL operations to manipulate records in tables.
 

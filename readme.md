@@ -1,5 +1,413 @@
 # SQL Prac
 
+<!-- =========================================================== -->
+
+### **SQL Operations: Comprehensive Guide**
+
+---
+
+### **1. Database Operations**
+#### **Definition:** SQL operations to create, modify, and delete databases.
+
+- **Create Database**
+  ```sql
+  CREATE DATABASE DatabaseName;
+  ```
+  Creates a new database.
+
+- **Use Database**
+  ```sql
+  USE DatabaseName;
+  ```
+  Selects a database for operations.
+
+- **Modify Database**
+  ```sql
+  ALTER DATABASE DatabaseName MODIFY NAME = NewDatabaseName;
+  ```
+  Renames an existing database.
+
+- **Delete Database**
+  ```sql
+  DROP DATABASE DatabaseName;
+  ```
+  Deletes an existing database.
+
+---
+
+### **2. Table Operations**
+#### **Definition:** SQL operations to create, modify, and delete tables.
+
+- **Create Table**
+  ```sql
+  CREATE TABLE TableName (
+      Column1 DataType Constraints,
+      Column2 DataType Constraints
+  );
+  ```
+  Example with Constraints:
+  ```sql
+  CREATE TABLE Employees (
+      EmployeeID INT PRIMARY KEY AUTO_INCREMENT,
+      Name VARCHAR(100) NOT NULL,
+      DepartmentID INT,
+      Salary DECIMAL(10, 2) DEFAULT 0.00
+  );
+  ```
+
+- **Modify Table (Add/Drop Columns)**
+  ```sql
+  ALTER TABLE TableName ADD ColumnName DataType;
+  ALTER TABLE TableName DROP COLUMN ColumnName;
+  ```
+  Adds or removes a column.
+
+- **Modify Column**
+  ```sql
+  ALTER TABLE TableName MODIFY ColumnName NewDataType;
+  ```
+  Changes the data type or size of a column.
+
+- **Delete Table**
+  ```sql
+  DROP TABLE TableName;
+  ```
+  Deletes an existing table.
+
+---
+
+### **3. Data (Record) Operations**
+#### **Definition:** SQL operations to manipulate records in tables.
+
+- **Insert Data**
+  ```sql
+  INSERT INTO TableName (Column1, Column2) VALUES (Value1, Value2);
+  ```
+  Inserts a new row.
+
+- **Update Data**
+  ```sql
+  UPDATE TableName
+  SET Column1 = NewValue1
+  WHERE Condition;
+  ```
+  Modifies existing data.
+
+- **Delete Data**
+  ```sql
+  DELETE FROM TableName
+  WHERE Condition;
+  ```
+  Removes rows matching a condition.
+
+- **Retrieve Data**
+  ```sql
+  SELECT Column1, Column2 FROM TableName WHERE Condition;
+  ```
+  Retrieves specific rows.
+
+---
+
+### **4. Views**
+#### **Definition:** A virtual table created using SQL queries.
+
+- **Create View**
+  ```sql
+  CREATE VIEW ViewName AS
+  SELECT Column1, Column2
+  FROM TableName
+  WHERE Condition;
+  ```
+  Example:
+  ```sql
+  CREATE VIEW HighSalaryEmployees AS
+  SELECT Name, Salary
+  FROM Employees
+  WHERE Salary > 50000;
+  ```
+
+- **Modify View**
+  ```sql
+  CREATE OR REPLACE VIEW ViewName AS
+  SELECT Column1, Column2
+  FROM TableName
+  WHERE Condition;
+  ```
+  Updates the definition of a view.
+
+- **Delete View**
+  ```sql
+  DROP VIEW ViewName;
+  ```
+  Removes an existing view.
+
+---
+
+### **5. Indexes**
+#### **Definition:** Structures to improve the speed of data retrieval.
+
+- **Create Index**
+  ```sql
+  CREATE INDEX IndexName ON TableName(ColumnName);
+  ```
+
+- **Unique Index**
+  ```sql
+  CREATE UNIQUE INDEX IndexName ON TableName(ColumnName);
+  ```
+
+- **Drop Index**
+  ```sql
+  DROP INDEX IndexName ON TableName;
+  ```
+
+---
+
+### **6. Constraints**
+#### **Definition:** Rules applied to columns for data integrity.
+
+- **Primary Key**
+  ```sql
+  CREATE TABLE Example (
+      ID INT PRIMARY KEY
+  );
+  ```
+
+- **Foreign Key**
+  ```sql
+  CREATE TABLE Orders (
+      OrderID INT PRIMARY KEY,
+      CustomerID INT,
+      FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+  );
+  ```
+
+- **Unique**
+  ```sql
+  CREATE TABLE Example (
+      Email VARCHAR(255) UNIQUE
+  );
+  ```
+
+- **Check**
+  ```sql
+  CREATE TABLE Example (
+      Age INT CHECK (Age >= 18)
+  );
+  ```
+
+- **Default**
+  ```sql
+  CREATE TABLE Example (
+      Status VARCHAR(50) DEFAULT 'Active'
+  );
+  ```
+
+- **Not Null**
+  ```sql
+  CREATE TABLE Example (
+      Name VARCHAR(100) NOT NULL
+  );
+  ```
+
+---
+
+### **7. Auto-Increment**
+#### **Definition:** Automatically generates unique values for a column.
+
+- **Example:**
+  ```sql
+  CREATE TABLE Employees (
+      EmployeeID INT AUTO_INCREMENT PRIMARY KEY,
+      Name VARCHAR(100)
+  );
+  ```
+
+---
+
+### **8. Stored Procedures**
+#### **Definition:** A group of SQL statements executed as a unit.
+
+- **Create Procedure**
+  ```sql
+  CREATE PROCEDURE ProcedureName()
+  BEGIN
+      SELECT * FROM TableName;
+  END;
+  ```
+
+- **Execute Procedure**
+  ```sql
+  CALL ProcedureName();
+  ```
+
+- **Drop Procedure**
+  ```sql
+  DROP PROCEDURE ProcedureName;
+  ```
+
+---
+
+### **9. Transactions**
+#### **Definition:** A series of operations executed as a single unit.
+
+- **Begin Transaction**
+  ```sql
+  BEGIN TRANSACTION;
+  ```
+
+- **Commit**
+  ```sql
+  COMMIT;
+  ```
+
+- **Rollback**
+  ```sql
+  ROLLBACK;
+  ```
+
+---
+
+### **10. Triggers**
+#### **Definition:** Automatically executes a function in response to certain events.
+
+- **Create Trigger**
+  ```sql
+  CREATE TRIGGER TriggerName
+  AFTER INSERT ON TableName
+  FOR EACH ROW
+  BEGIN
+      INSERT INTO AuditLog (Action) VALUES ('Insert Operation');
+  END;
+  ```
+
+- **Drop Trigger**
+  ```sql
+  DROP TRIGGER TriggerName;
+  ```
+
+
+---
+
+<!-- ==================================================== -->
+
+### **Difference Between DROP, DELETE, and TRUNCATE**
+
+
+### **1. DROP Command**
+#### **Definition:**  
+The `DROP` command removes an **entire database object** (like a table, database, view, etc.). Once dropped, the object and its data are permanently removed, and it cannot be recovered unless backed up.
+
+#### **Key Characteristics:**
+- Deletes the table structure and all its data permanently.
+- Cannot be rolled back.
+- Frees up the storage space allocated to the object.
+
+#### **Example:**
+```sql
+DROP TABLE Employees;
+```
+- Removes the `Employees` table entirely, including its structure and data.
+
+#### **Use Case:**
+When you want to permanently delete a table or database.
+
+---
+
+### **2. DELETE Command**
+#### **Definition:**  
+The `DELETE` command removes specific rows from a table based on a condition. The table structure and the remaining data are unaffected.
+
+#### **Key Characteristics:**
+- Deletes rows based on a condition (`WHERE` clause).  
+- If no `WHERE` clause is provided, deletes all rows but keeps the table structure.
+- Can be rolled back (if inside a transaction).  
+- Triggers associated with the table are activated.
+
+#### **Example:**
+```sql
+DELETE FROM Employees WHERE DepartmentID = 2;
+```
+- Deletes only rows where `DepartmentID` is `2`.
+
+#### **Use Case:**
+When you want to remove specific rows from a table.
+
+---
+
+### **3. TRUNCATE Command**
+#### **Definition:**  
+The `TRUNCATE` command removes **all rows** from a table without logging individual row deletions. It resets the table to an empty state but retains the table structure.
+
+#### **Key Characteristics:**
+- Deletes all rows in the table.  
+- Cannot have a `WHERE` clause.  
+- Cannot be rolled back (not logged like `DELETE`).  
+- Faster than `DELETE` because it doesn’t log each row deletion.  
+- Resets auto-increment counters (if any).
+
+#### **Example:**
+```sql
+TRUNCATE TABLE Employees;
+```
+- Removes all rows from the `Employees` table but keeps the structure intact.
+
+#### **Use Case:**
+When you want to quickly clear all data from a table without removing its structure.
+
+---
+
+### **Key Differences**
+
+| Feature                  | DROP                          | DELETE                          | TRUNCATE                       |
+|--------------------------|-------------------------------|---------------------------------|--------------------------------|
+| **Purpose**              | Deletes the entire object.    | Deletes specific rows.          | Deletes all rows.              |
+| **Structure**            | Removes the table structure.  | Retains the structure.          | Retains the structure.         |
+| **Condition (`WHERE`)**  | Not allowed.                 | Allowed.                       | Not allowed.                  |
+| **Rollback Support**     | No                           | Yes (if within a transaction). | No                            |
+| **Speed**                | Fast                         | Slower (row-by-row logging).   | Very fast.                    |
+| **Auto-increment Reset** | Not applicable.              | No.                            | Yes.                          |
+| **Trigger Activation**   | No                           | Yes.                           | No.                           |
+
+---
+
+### **Examples in Context**
+
+#### Scenario: Remove a specific employee's data.
+```sql
+DELETE FROM Employees WHERE EmployeeID = 101;
+```
+- Removes only the employee with `EmployeeID = 101`.
+
+#### Scenario: Empty a table but keep its structure for reuse.
+```sql
+TRUNCATE TABLE Employees;
+```
+- Clears all rows from the `Employees` table.
+
+#### Scenario: Permanently remove a table and its data.
+```sql
+DROP TABLE Employees;
+```
+- Deletes the `Employees` table entirely.
+
+---
+
+### **Conclusion**
+- Use `DROP` to permanently delete a table or database.  
+- Use `DELETE` to remove specific rows while retaining the table structure.  
+- Use `TRUNCATE` to quickly remove all rows from a table without affecting its structure.  
+
+
+
+
+
+
+
+
+<!-- ============================================================= -->
+---
+
 ### 1. **Introduction to SQL**
 - **What is SQL?**  
   Structured Query Language (SQL) is a standard language used to interact with databases, enabling tasks such as creating databases, retrieving data, updating records, etc.

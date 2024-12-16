@@ -1254,9 +1254,49 @@ FROM Employees;
 - Key functions include `RANK()`, `ROW_NUMBER()`, `LEAD()`, `LAG()`, `SUM()`, `AVG()`, and others.
 - Window functions can partition data (`PARTITION BY`), order it (`ORDER BY`), and define the window frame (`ROWS`).
 
+---
+---
 
 
 
+# Some Interview question queries
+
+`1`
+
+```sql
+SELECT YEAR(Order_date) AS Years, MONTH(Order_date) AS Months, SUM(Sales) AS TotalSales
+FROM Products
+GROUP BY YEAR(Order_date), MONTH(Order_date)
+ORDER BY TotalSales DESC;
+```
+`2`
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+## Test Question Check
+
+`1`
+
+`Is this correct or not`
+
+```sql
+select count(*) as count from train_details_tbl
+    where train_from = (select station_name from train_stations_tbl where station_name = 'NEW DELHI')
+    and
+    train_to = (select station_name from train_stations_tbl where station_name = 'MUMBAI CENTRAL' OR 'BHOPAL');
+```
 
 
 

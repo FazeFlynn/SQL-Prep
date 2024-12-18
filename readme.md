@@ -1257,6 +1257,1568 @@ FROM Employees;
 ---
 ---
 
+# 200 Short SQL Interview Questions Compilation
+
+
+
+### **1. What is SQL?**
+SQL (Structured Query Language) is a standard language for managing and manipulating relational databases, including creating, updating, deleting, and querying data.
+
+---
+
+### **2. What are the types of SQL commands?**
+1. **DDL (Data Definition Language):** `CREATE`, `ALTER`, `DROP`.  
+2. **DML (Data Manipulation Language):** `INSERT`, `UPDATE`, `DELETE`.  
+3. **DQL (Data Query Language):** `SELECT`.  
+4. **TCL (Transaction Control Language):** `COMMIT`, `ROLLBACK`.  
+5. **DCL (Data Control Language):** `GRANT`, `REVOKE`.
+
+---
+
+### **3. What is the difference between `DELETE` and `TRUNCATE`?**
+| **DELETE**               | **TRUNCATE**                 |
+|--------------------------|------------------------------|
+| Deletes specific rows.   | Deletes all rows.            |
+| Can use `WHERE`.         | Cannot use `WHERE`.          |
+| Slower (logs each row).  | Faster (no row-level logging). |
+| Can be rolled back.      | Cannot be rolled back.       |
+
+---
+
+### **4. What are constraints in SQL?**
+Constraints enforce rules on data. Common constraints:
+- **NOT NULL:** Prevents null values.  
+- **UNIQUE:** Ensures unique values in a column.  
+- **PRIMARY KEY:** Combines `NOT NULL` and `UNIQUE`.  
+- **FOREIGN KEY:** Links two tables.  
+- **CHECK:** Validates column data.  
+- **DEFAULT:** Sets a default value for a column.
+
+---
+
+### **5. What is a primary key?**
+A primary key uniquely identifies each row in a table. It cannot have `NULL` values and must be unique.
+
+---
+
+### **6. What is a foreign key?**
+A foreign key is a column in one table that refers to the primary key of another table, establishing a relationship between the two.
+
+---
+
+### **7. What is the difference between `INNER JOIN` and `OUTER JOIN`?**
+| **INNER JOIN**            | **OUTER JOIN**            |
+|---------------------------|---------------------------|
+| Returns matching rows.    | Returns matching + non-matching rows. |
+| Excludes unmatched data.  | Includes unmatched data with `NULL`. |
+
+---
+
+### **8. What is a view in SQL?**
+A view is a virtual table based on the result of a `SELECT` query. Example:
+```sql
+CREATE VIEW employee_view AS
+SELECT Name, Department FROM Employees;
+```
+
+---
+
+### **9. How to find duplicate rows in a table?**
+```sql
+SELECT Column1, COUNT(*) 
+FROM TableName 
+GROUP BY Column1 
+HAVING COUNT(*) > 1;
+```
+
+---
+
+### **10. What is the difference between `RANK()` and `ROW_NUMBER()`?**
+- **`RANK()`**: Assigns the same rank for ties but skips ranks.  
+- **`ROW_NUMBER()`**: Assigns a unique number to each row.
+
+---
+
+### **11. What is indexing in SQL?**
+Indexing improves the speed of data retrieval. Types:
+1. **Clustered Index:** Reorders the table.  
+2. **Non-Clustered Index:** Creates a separate structure for lookups.
+
+---
+
+### **12. Write a query to find the second-highest salary.**
+```sql
+SELECT MAX(Salary) AS SecondHighest
+FROM Employees
+WHERE Salary < (SELECT MAX(Salary) FROM Employees);
+```
+
+---
+
+### **13. What is the difference between `HAVING` and `WHERE`?**
+- **`WHERE`**: Filters rows before grouping.  
+- **`HAVING`**: Filters groups after aggregation.
+
+---
+
+### **14. What are aggregate functions?**
+Functions that perform calculations on multiple rows:
+- `SUM()`, `AVG()`, `COUNT()`, `MIN()`, `MAX()`.
+
+---
+
+### **15. What is the difference between `DROP` and `TRUNCATE`?**
+- **`DROP`**: Deletes the table structure and data.  
+- **`TRUNCATE`**: Deletes all rows but keeps the table structure.
+
+---
+
+### **16. What is a stored procedure?**
+A stored procedure is a precompiled set of SQL statements that can be executed as a single unit.
+
+**Example:**
+```sql
+CREATE PROCEDURE GetEmployees()
+AS
+BEGIN
+    SELECT * FROM Employees;
+END;
+```
+
+---
+
+### **17. What are window functions?**
+Functions that perform calculations across a window of rows without collapsing the result set.  
+Example:
+```sql
+SELECT Name, Salary, 
+       RANK() OVER (PARTITION BY DepartmentID ORDER BY Salary DESC) AS Rank
+FROM Employees;
+```
+
+---
+
+### **18. What is a transaction?**
+A transaction is a sequence of SQL statements executed as a single unit of work. Properties:
+- **Atomicity, Consistency, Isolation, Durability (ACID).**
+
+---
+
+### **19. How do you handle NULL values in SQL?**
+Use functions like:
+- `IS NULL`: Check for NULL.
+- `COALESCE(value1, value2)`: Returns the first non-NULL value.
+
+---
+
+### **20. What is SQL injection?**
+SQL injection is a security vulnerability that allows attackers to manipulate queries. Use **prepared statements** to prevent it:
+```sql
+SELECT * FROM Users WHERE Username = ? AND Password = ?;
+```
+
+---
+
+### **21. What is a `CASE` statement in SQL?**
+It adds conditional logic to queries.  
+Example:
+```sql
+SELECT Name, 
+       CASE 
+           WHEN Salary > 50000 THEN 'High'
+           ELSE 'Low'
+       END AS SalaryCategory
+FROM Employees;
+```
+
+---
+
+### **22. What is normalization?**
+Normalization is the process of organizing data to reduce redundancy and improve integrity. Common forms:
+1. **1NF:** Remove duplicate columns.  
+2. **2NF:** Ensure no partial dependency.  
+3. **3NF:** Remove transitive dependencies.
+
+---
+
+### **23. Write a query to fetch common rows from two tables.**
+```sql
+SELECT Name 
+FROM TableA 
+INTERSECT 
+SELECT Name 
+FROM TableB;
+```
+
+---
+
+### **24. How to fetch the current date in SQL?**
+```sql
+SELECT CURRENT_DATE; -- MySQL, PostgreSQL
+```
+
+---
+
+### **25. Explain the `LIMIT` and `OFFSET` clauses.**
+- **`LIMIT`**: Limits the number of rows returned.
+- **`OFFSET`**: Skips rows before returning the result.
+
+**Example:**
+```sql
+SELECT * FROM Employees LIMIT 10 OFFSET 5;
+```
+
+---
+
+
+
+### **26. What is a surrogate key?**
+A surrogate key is a unique identifier for a record, generated by the system (e.g., `AUTO_INCREMENT` in MySQL).
+
+---
+
+### **27. What is the difference between `COALESCE` and `ISNULL`?**
+- **`COALESCE`:** Returns the first non-NULL value from multiple inputs.  
+- **`ISNULL`:** Checks if a single value is `NULL`.
+
+---
+
+### **28. Write a query to find the nth highest salary.**
+```sql
+SELECT DISTINCT Salary 
+FROM Employees 
+ORDER BY Salary DESC 
+LIMIT 1 OFFSET n-1;
+```
+
+---
+
+### **29. What is the difference between `UNION` and `UNION ALL`?**
+- **`UNION`:** Eliminates duplicate rows.  
+- **`UNION ALL`:** Includes duplicates.
+
+---
+
+### **30. What is the difference between a view and a materialized view?**
+- **View:** A virtual table that executes a query each time it’s accessed.  
+- **Materialized View:** Stores the query result physically.
+
+---
+
+### **31. How do you create a unique index?**
+```sql
+CREATE UNIQUE INDEX idx_name ON Employees (Email);
+```
+
+---
+
+### **32. What is the purpose of the `GROUP BY` clause?**
+It groups rows sharing the same value in specified columns for aggregation functions.
+
+**Example:**
+```sql
+SELECT DepartmentID, AVG(Salary) 
+FROM Employees 
+GROUP BY DepartmentID;
+```
+
+---
+
+### **33. What is a CTE (Common Table Expression)?**
+A temporary result set defined using `WITH`.  
+
+**Example:**
+```sql
+WITH CTE AS (
+    SELECT Name, Salary FROM Employees WHERE Salary > 50000
+)
+SELECT * FROM CTE;
+```
+
+---
+
+### **34. Write a query to fetch even and odd rows.**
+**Odd Rows:**
+```sql
+SELECT * FROM Employees WHERE MOD(EmployeeID, 2) = 1;
+```
+**Even Rows:**
+```sql
+SELECT * FROM Employees WHERE MOD(EmployeeID, 2) = 0;
+```
+
+---
+
+### **35. What is a cross join?**
+A `CROSS JOIN` combines every row from two tables (Cartesian product).  
+
+**Example:**
+```sql
+SELECT * 
+FROM TableA CROSS JOIN TableB;
+```
+
+---
+
+### **36. How do you delete duplicate rows?**
+```sql
+DELETE FROM Employees 
+WHERE EmployeeID NOT IN (
+    SELECT MIN(EmployeeID) 
+    FROM Employees 
+    GROUP BY Name, DepartmentID
+);
+```
+
+---
+
+### **37. What is a composite key?**
+A composite key is a primary key made up of two or more columns to uniquely identify a row.
+
+**Example:**
+```sql
+CREATE TABLE Orders (
+    OrderID INT,
+    ProductID INT,
+    PRIMARY KEY (OrderID, ProductID)
+);
+```
+
+---
+
+### **38. What is the difference between `NOW()` and `CURRENT_TIMESTAMP`?**
+Both return the current date and time, but behavior may differ slightly in some databases.  
+- **`NOW()`**: MySQL.  
+- **`CURRENT_TIMESTAMP`**: Standard SQL.
+
+---
+
+### **39. How to copy a table structure without data?**
+```sql
+CREATE TABLE new_table LIKE old_table; -- MySQL
+```
+
+---
+
+### **40. What is the difference between `DELETE` and `DROP`?**
+- **`DELETE`:** Removes rows but retains the table.  
+- **`DROP`:** Removes the table entirely.
+
+---
+
+### **41. How do you fetch the highest salary in each department?**
+```sql
+SELECT DepartmentID, MAX(Salary) 
+FROM Employees 
+GROUP BY DepartmentID;
+```
+
+---
+
+### **42. What is the difference between `IN` and `EXISTS`?**
+- **`IN`:** Checks values within a list.  
+- **`EXISTS`:** Checks if a subquery returns rows.
+
+---
+
+### **43. What is the use of the `CAST()` function?**
+Converts data types.
+```sql
+SELECT CAST(123.45 AS INT);
+```
+
+---
+
+### **44. How to calculate the percentage in a query?**
+```sql
+SELECT Name, (Salary / SUM(Salary) OVER()) * 100 AS Percentage 
+FROM Employees;
+```
+
+---
+
+### **45. How do you find employees without a manager?**
+```sql
+SELECT * FROM Employees WHERE ManagerID IS NULL;
+```
+
+---
+
+### **46. Write a query to list all tables in a database.**
+```sql
+SHOW TABLES; -- MySQL
+```
+
+---
+
+### **47. What is a self join?**
+A join where a table is joined with itself.  
+**Example:**
+```sql
+SELECT A.Name, B.Name AS Manager 
+FROM Employees A 
+JOIN Employees B ON A.ManagerID = B.EmployeeID;
+```
+
+---
+
+### **48. What is a correlated subquery?**
+A subquery that depends on the outer query.  
+**Example:**
+```sql
+SELECT Name, Salary 
+FROM Employees E1 
+WHERE Salary > (SELECT AVG(Salary) FROM Employees E2 WHERE E1.DepartmentID = E2.DepartmentID);
+```
+
+---
+
+### **49. How do you update multiple columns?**
+```sql
+UPDATE Employees 
+SET Name = 'John', Salary = 60000 
+WHERE EmployeeID = 101;
+```
+
+---
+
+### **50. How do you rename a column in SQL?**
+```sql
+ALTER TABLE Employees RENAME COLUMN old_name TO new_name; -- PostgreSQL
+```
+
+
+---
+
+### **51. How do you fetch the last N rows from a table?**
+```sql
+SELECT * 
+FROM Employees 
+ORDER BY EmployeeID DESC 
+LIMIT N;
+```
+
+---
+
+### **52. What is the difference between `CHAR` and `VARCHAR`?**
+- **`CHAR`**: Fixed-length storage.  
+- **`VARCHAR`**: Variable-length storage.
+
+---
+
+### **53. Write a query to swap values of two columns in a table.**
+```sql
+UPDATE Employees 
+SET Column1 = Column2, Column2 = Column1;
+```
+
+---
+
+### **54. How do you add a new column to a table?**
+```sql
+ALTER TABLE Employees ADD Address VARCHAR(255);
+```
+
+---
+
+### **55. What is the difference between a clustered and non-clustered index?**
+- **Clustered:** Reorders the actual table rows.  
+- **Non-Clustered:** Creates a separate structure for lookup.
+
+---
+
+### **56. How to remove duplicate rows but keep one?**
+```sql
+DELETE FROM Employees 
+WHERE EmployeeID NOT IN (
+    SELECT MIN(EmployeeID) 
+    FROM Employees 
+    GROUP BY Name, DepartmentID
+);
+```
+
+---
+
+### **57. Write a query to calculate the cumulative sum.**
+```sql
+SELECT Name, Salary, 
+       SUM(Salary) OVER (ORDER BY Salary) AS CumulativeSalary 
+FROM Employees;
+```
+
+---
+
+### **58. What are the differences between `CASE` and `IF` in SQL?**
+- **`CASE`**: Used in queries for conditional logic.  
+- **`IF`**: Used in stored procedures/functions for flow control.
+
+---
+
+### **59. How do you find the length of a string in SQL?**
+```sql
+SELECT LENGTH('Hello'); -- MySQL
+```
+
+---
+
+### **60. Write a query to get the current database name.**
+```sql
+SELECT DATABASE(); -- MySQL
+```
+
+---
+
+### **61. What is the use of the `GROUP_CONCAT()` function?**
+Combines values into a single string.
+```sql
+SELECT GROUP_CONCAT(Name) FROM Employees;
+```
+
+---
+
+### **62. Write a query to fetch employees with salaries between 30K and 50K.**
+```sql
+SELECT * 
+FROM Employees 
+WHERE Salary BETWEEN 30000 AND 50000;
+```
+
+---
+
+### **63. How to check if a column exists in a table?**
+```sql
+SHOW COLUMNS FROM Employees LIKE 'ColumnName'; -- MySQL
+```
+
+---
+
+### **64. What is the purpose of `HAVING` without `GROUP BY`?**
+Filters rows after aggregate functions.
+```sql
+SELECT COUNT(*) 
+FROM Employees 
+HAVING COUNT(*) > 10;
+```
+
+---
+
+### **65. Write a query to fetch the nth row of a table.**
+```sql
+SELECT * 
+FROM Employees 
+ORDER BY EmployeeID 
+LIMIT 1 OFFSET N-1;
+```
+
+---
+
+### **66. How do you change a column's data type?**
+```sql
+ALTER TABLE Employees 
+MODIFY Salary DECIMAL(10, 2); -- MySQL
+```
+
+---
+
+### **67. What is a JSON data type in SQL?**
+A data type used to store JSON objects in databases like MySQL and PostgreSQL.
+
+**Example:**
+```sql
+SELECT JSON_EXTRACT(data, '$.key') FROM table_name;
+```
+
+---
+
+### **68. Write a query to find the total count of rows in a table.**
+```sql
+SELECT COUNT(*) FROM Employees;
+```
+
+---
+
+### **69. How do you concatenate two columns in SQL?**
+```sql
+SELECT CONCAT(FirstName, ' ', LastName) AS FullName 
+FROM Employees;
+```
+
+---
+
+### **70. What is the difference between `EXCEPT` and `NOT IN`?**
+- **`EXCEPT`**: Removes rows from one query present in another.  
+- **`NOT IN`**: Filters rows not present in a subquery.
+
+---
+
+### **71. Write a query to find employees hired in the current year.**
+```sql
+SELECT * 
+FROM Employees 
+WHERE YEAR(HireDate) = YEAR(CURDATE());
+```
+
+---
+
+### **72. What is a sequence in SQL?**
+A database object that generates numeric values sequentially.
+
+**Example:**
+```sql
+CREATE SEQUENCE seq START WITH 1 INCREMENT BY 1;
+```
+
+---
+
+### **73. How do you fetch random rows from a table?**
+```sql
+SELECT * 
+FROM Employees 
+ORDER BY RAND() 
+LIMIT 5;
+```
+
+---
+
+### **74. Write a query to find the median salary of employees.**
+```sql
+SELECT AVG(Salary) 
+FROM (SELECT Salary FROM Employees ORDER BY Salary LIMIT 2 OFFSET (SELECT COUNT(*) FROM Employees) / 2 - 1) AS MedianSubquery;
+```
+
+---
+
+### **75. How do you reset an auto-increment column?**
+```sql
+ALTER TABLE Employees AUTO_INCREMENT = 1;
+```
+
+---
+
+
+---
+
+### **76. How do you fetch common records between two tables?**
+```sql
+SELECT * FROM TableA INTERSECT SELECT * FROM TableB;
+```
+
+---
+
+### **77. What is the difference between `FETCH` and `OFFSET`?**
+- **`FETCH`**: Limits the number of rows returned.  
+- **`OFFSET`**: Skips a specified number of rows.
+
+---
+
+### **78. Write a query to find all tables in a database with a specific column.**
+```sql
+SELECT TABLE_NAME 
+FROM INFORMATION_SCHEMA.COLUMNS 
+WHERE COLUMN_NAME = 'ColumnName';
+```
+
+---
+
+### **79. What is the `BIT` data type?**
+Stores binary data as 0 or 1, useful for boolean values.
+
+---
+
+### **80. Write a query to drop a primary key constraint.**
+```sql
+ALTER TABLE Employees DROP PRIMARY KEY;
+```
+
+---
+
+### **81. How do you find the second-largest value without using `LIMIT`?**
+```sql
+SELECT MAX(Salary) 
+FROM Employees 
+WHERE Salary < (SELECT MAX(Salary) FROM Employees);
+```
+
+---
+
+### **82. What are stored functions in SQL?**
+Functions that return a value and are used in queries.
+
+**Example:**
+```sql
+CREATE FUNCTION GetFullName (FirstName VARCHAR(50), LastName VARCHAR(50))
+RETURNS VARCHAR(100)
+RETURN CONCAT(FirstName, ' ', LastName);
+```
+
+---
+
+### **83. What is a partitioned table?**
+A table divided into smaller, manageable pieces (partitions) for performance optimization.
+
+---
+
+### **84. How do you disable foreign key checks in MySQL?**
+```sql
+SET FOREIGN_KEY_CHECKS = 0;
+```
+
+---
+
+### **85. What are magic tables in SQL Server?**
+Temporary tables (`INSERTED`, `DELETED`) used within triggers.
+
+---
+
+### **86. Write a query to find rows with NULL values in a column.**
+```sql
+SELECT * FROM Employees WHERE ColumnName IS NULL;
+```
+
+---
+
+### **87. How to remove a column from a table?**
+```sql
+ALTER TABLE Employees DROP COLUMN ColumnName;
+```
+
+---
+
+### **88. What is the `MERGE` statement?**
+Combines `INSERT`, `UPDATE`, and `DELETE` into one statement.
+
+**Example:**
+```sql
+MERGE INTO TargetTable T
+USING SourceTable S
+ON T.ID = S.ID
+WHEN MATCHED THEN UPDATE SET T.Name = S.Name
+WHEN NOT MATCHED THEN INSERT (ID, Name) VALUES (S.ID, S.Name);
+```
+
+---
+
+### **89. Write a query to find duplicate rows in a table.**
+```sql
+SELECT Name, COUNT(*) 
+FROM Employees 
+GROUP BY Name 
+HAVING COUNT(*) > 1;
+```
+
+---
+
+### **90. How do you calculate the difference between two dates?**
+```sql
+SELECT DATEDIFF('2024-12-31', '2024-01-01') AS Difference;
+```
+
+---
+
+### **91. How to add a unique constraint to an existing column?**
+```sql
+ALTER TABLE Employees ADD CONSTRAINT unique_constraint_name UNIQUE (ColumnName);
+```
+
+---
+
+### **92. What is the difference between `==` and `=` in SQL?**
+- **`=`**: Used for comparison in SQL.  
+- **`==`**: Not valid in SQL; used in some programming languages.
+
+---
+
+### **93. Write a query to rename a table.**
+```sql
+ALTER TABLE old_table_name RENAME TO new_table_name;
+```
+
+---
+
+### **94. What is the difference between scalar and aggregate functions?**
+- **Scalar:** Operates on individual rows (e.g., `LEN()`, `ABS()`).  
+- **Aggregate:** Operates on groups of rows (e.g., `SUM()`, `COUNT()`).
+
+---
+
+### **95. Write a query to retrieve unique combinations of two columns.**
+```sql
+SELECT DISTINCT Column1, Column2 FROM TableName;
+```
+
+---
+
+### **96. What is the use of `WITH TIES` in `TOP` queries?**
+Returns additional rows that tie for the last position.  
+```sql
+SELECT TOP 3 WITH TIES * FROM Employees ORDER BY Salary DESC;
+```
+
+---
+
+### **97. How do you check if a table exists in a database?**
+```sql
+SELECT TABLE_NAME 
+FROM INFORMATION_SCHEMA.TABLES 
+WHERE TABLE_NAME = 'TableName';
+```
+
+---
+
+### **98. Write a query to pivot rows into columns.**
+```sql
+SELECT DepartmentID, 
+       MAX(CASE WHEN Gender = 'Male' THEN Salary ELSE NULL END) AS MaleSalary,
+       MAX(CASE WHEN Gender = 'Female' THEN Salary ELSE NULL END) AS FemaleSalary
+FROM Employees
+GROUP BY DepartmentID;
+```
+
+---
+
+### **99. How do you fetch records where a column starts with 'A'?**
+```sql
+SELECT * FROM Employees WHERE Name LIKE 'A%';
+```
+
+---
+
+### **100. What is the difference between `NVL()` and `COALESCE()`?**
+- **`NVL()`**: Replaces `NULL` with a specified value (Oracle-specific).  
+- **`COALESCE()`**: Replaces `NULL` with the first non-NULL value in multiple arguments (Standard SQL).
+
+---
+
+
+### **101. What is a composite index?**
+An index on multiple columns to speed up queries involving those columns.
+
+---
+
+### **102. How do you check the current SQL version?**
+```sql
+SELECT VERSION(); -- MySQL
+```
+
+---
+
+### **103. Write a query to get the day of the week for a date.**
+```sql
+SELECT DAYNAME('2024-12-31'); -- MySQL
+```
+
+---
+
+### **104. What is a lateral join?**
+A `LATERAL` join allows a subquery to reference columns from the outer query.  
+```sql
+SELECT * FROM Employees E CROSS JOIN LATERAL (SELECT MAX(Salary) FROM Salaries S WHERE S.EmployeeID = E.ID);
+```
+
+---
+
+### **105. How do you remove a foreign key constraint?**
+```sql
+ALTER TABLE Employees DROP FOREIGN KEY fk_name;
+```
+
+---
+
+### **106. Write a query to reverse a string.**
+```sql
+SELECT REVERSE('Hello'); -- MySQL
+```
+
+---
+
+### **107. What is the use of the `LIMIT` clause?**
+Restricts the number of rows returned.  
+```sql
+SELECT * FROM Employees LIMIT 10;
+```
+
+---
+
+### **108. How do you check table dependencies?**
+```sql
+SELECT REFERENCED_TABLE_NAME 
+FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
+WHERE TABLE_NAME = 'TableName';
+```
+
+---
+
+### **109. What is the difference between `TRIM()`, `LTRIM()`, and `RTRIM()`?**
+- **`TRIM()`**: Removes spaces from both sides.  
+- **`LTRIM()`**: Removes spaces from the left.  
+- **`RTRIM()`**: Removes spaces from the right.
+
+---
+
+### **110. How do you calculate the difference between two times?**
+```sql
+SELECT TIMEDIFF('10:30:00', '08:00:00'); -- MySQL
+```
+
+---
+
+### **111. What are system tables in SQL?**
+System tables store metadata about the database (e.g., `INFORMATION_SCHEMA.TABLES`).
+
+---
+
+### **112. Write a query to convert a string to uppercase.**
+```sql
+SELECT UPPER('hello'); -- MySQL
+```
+
+---
+
+### **113. What is a derived table?**
+A subquery that acts as a temporary table in a `FROM` clause.  
+```sql
+SELECT * FROM (SELECT Name, Salary FROM Employees) AS DerivedTable;
+```
+
+---
+
+### **114. How do you find the first three characters of a string?**
+```sql
+SELECT SUBSTRING('Hello', 1, 3); -- MySQL
+```
+
+---
+
+### **115. Write a query to find employees earning more than their manager.**
+```sql
+SELECT E.Name 
+FROM Employees E 
+JOIN Employees M ON E.ManagerID = M.EmployeeID 
+WHERE E.Salary > M.Salary;
+```
+
+---
+
+### **116. How do you list indexes on a table?**
+```sql
+SHOW INDEX FROM TableName; -- MySQL
+```
+
+---
+
+### **117. What is the `EXPLAIN` command?**
+It shows the execution plan of a query for optimization.  
+```sql
+EXPLAIN SELECT * FROM Employees WHERE Salary > 50000;
+```
+
+---
+
+### **118. How do you create a full-text index?**
+```sql
+CREATE FULLTEXT INDEX ft_index ON Employees (Name);
+```
+
+---
+
+### **119. Write a query to generate random numbers.**
+```sql
+SELECT RAND(); -- MySQL
+```
+
+---
+
+### **120. How do you add comments in SQL?**
+- Single-line: `-- Comment`  
+- Multi-line: `/* Comment */`
+
+---
+
+### **121. What is the `IFNULL()` function?**
+Replaces `NULL` with a specified value.  
+```sql
+SELECT IFNULL(Salary, 0) FROM Employees;
+```
+
+---
+
+### **122. How do you check query execution time?**
+```sql
+SET profiling = 1; 
+SELECT * FROM Employees; 
+SHOW PROFILES; -- MySQL
+```
+
+---
+
+### **123. Write a query to remove duplicates from a column.**
+```sql
+ALTER TABLE Employees ADD UNIQUE (ColumnName);
+```
+
+---
+
+### **124. How do you split a string in SQL?**
+Split functions vary by database; MySQL uses `SUBSTRING_INDEX()`:
+```sql
+SELECT SUBSTRING_INDEX('John,Doe,Developer', ',', 2);
+```
+
+---
+
+### **125. What is the difference between `COUNT(*)` and `COUNT(ColumnName)`?**
+- **`COUNT(*)`**: Counts all rows.  
+- **`COUNT(ColumnName)`**: Counts non-NULL values in the column.
+
+---
+
+### **126. How do you rename an index?**
+```sql
+ALTER TABLE Employees RENAME INDEX old_index_name TO new_index_name; -- MySQL
+```
+
+---
+
+### **127. What is the difference between `STORED` and `VIRTUAL` columns?**
+- **`STORED`**: Physically stored in the table.  
+- **`VIRTUAL`**: Calculated on the fly.
+
+---
+
+### **128. Write a query to get the last character of a string.**
+```sql
+SELECT RIGHT('Hello', 1); -- MySQL
+```
+
+---
+
+### **129. How do you list triggers in a database?**
+```sql
+SHOW TRIGGERS; -- MySQL
+```
+
+---
+
+### **130. What is the purpose of the `AS` keyword?**
+Used to create aliases for columns or tables.  
+```sql
+SELECT Name AS EmployeeName FROM Employees;
+```
+
+---
+
+
+### **131. What is a correlated subquery?**  
+A subquery that depends on the outer query for its values.  
+```sql
+SELECT Name FROM Employees E WHERE Salary > (SELECT AVG(Salary) FROM Employees WHERE DepartmentID = E.DepartmentID);
+```
+
+---
+
+### **132. Write a query to get the difference in months between two dates.**  
+```sql
+SELECT TIMESTAMPDIFF(MONTH, '2023-01-01', '2024-12-31'); -- MySQL
+```
+
+---
+
+### **133. How do you retrieve the current user?**  
+```sql
+SELECT USER(); -- MySQL
+```
+
+---
+
+### **134. What is the difference between `STORED PROCEDURE` and `FUNCTION`?**  
+- **Procedure:** Doesn’t return a value, used for tasks.  
+- **Function:** Returns a value, used in queries.
+
+---
+
+### **135. How do you retrieve duplicate values with their counts?**  
+```sql
+SELECT Name, COUNT(*) FROM Employees GROUP BY Name HAVING COUNT(*) > 1;
+```
+
+---
+
+### **136. What is the difference between `LEFT JOIN` and `RIGHT JOIN`?**  
+- **LEFT JOIN:** Returns all rows from the left table and matching rows from the right.  
+- **RIGHT JOIN:** Returns all rows from the right table and matching rows from the left.
+
+---
+
+### **137. How do you create a new database?**  
+```sql
+CREATE DATABASE TestDB;
+```
+
+---
+
+### **138. Write a query to find the highest salary in each department.**  
+```sql
+SELECT DepartmentID, MAX(Salary) FROM Employees GROUP BY DepartmentID;
+```
+
+---
+
+### **139. What is the difference between `BETWEEN` and `IN`?**  
+- **`BETWEEN`:** Checks if a value is within a range.  
+- **`IN`:** Checks if a value exists in a list.
+
+---
+
+### **140. How do you fetch a column with an alias?**  
+```sql
+SELECT Name AS EmployeeName FROM Employees;
+```
+
+---
+
+### **141. Write a query to fetch employees with no department.**  
+```sql
+SELECT * FROM Employees WHERE DepartmentID IS NULL;
+```
+
+---
+
+### **142. How do you list all databases in MySQL?**  
+```sql
+SHOW DATABASES;
+```
+
+---
+
+### **143. What is the use of `DISTINCT`?**  
+Eliminates duplicate rows from the result set.  
+```sql
+SELECT DISTINCT DepartmentID FROM Employees;
+```
+
+---
+
+### **144. Write a query to count NULL values in a column.**  
+```sql
+SELECT COUNT(*) - COUNT(ColumnName) AS NullCount FROM Employees;
+```
+
+---
+
+### **145. How do you concatenate multiple rows into a single string?**  
+```sql
+SELECT GROUP_CONCAT(Name) FROM Employees; -- MySQL
+```
+
+---
+
+### **146. What is the `IF` statement in SQL?**  
+```sql
+SELECT Name, IF(Salary > 50000, 'High', 'Low') AS SalaryCategory FROM Employees;
+```
+
+---
+
+### **147. How do you fetch all records except the top N?**  
+```sql
+SELECT * FROM Employees ORDER BY Salary LIMIT N, 18446744073709551615; -- MySQL
+```
+
+---
+
+### **148. What is the difference between `CROSS JOIN` and `SELF JOIN`?**  
+- **CROSS JOIN:** Produces a Cartesian product.  
+- **SELF JOIN:** Joins a table to itself.
+
+---
+
+### **149. Write a query to get the 3rd highest salary without using `LIMIT`.**  
+```sql
+SELECT DISTINCT Salary FROM Employees ORDER BY Salary DESC OFFSET 2 ROWS FETCH NEXT 1 ROW ONLY;
+```
+
+---
+
+### **150. How do you create a temporary table?**  
+```sql
+CREATE TEMPORARY TABLE TempTable AS SELECT * FROM Employees;
+```
+
+---
+
+### **151. Write a query to update a column conditionally.**  
+```sql
+UPDATE Employees SET Salary = Salary + 1000 WHERE DepartmentID = 2;
+```
+
+---
+
+### **152. What is a cascade delete?**  
+Automatically deletes rows in child tables when a parent row is deleted.  
+```sql
+FOREIGN KEY (DepartmentID) REFERENCES Departments(ID) ON DELETE CASCADE;
+```
+
+---
+
+### **153. How do you return the last inserted ID?**  
+```sql
+SELECT LAST_INSERT_ID(); -- MySQL
+```
+
+---
+
+### **154. What is the difference between `NOW()` and `SYSDATE()`?**  
+- **`NOW()`**: Captures the timestamp when the query starts.  
+- **`SYSDATE()`**: Captures the timestamp when executed.
+
+---
+
+### **155. Write a query to find the first non-NULL value.**  
+```sql
+SELECT COALESCE(Column1, Column2, 'Default') FROM Employees;
+```
+
+---
+
+### **156. How do you extract the year from a date?**  
+```sql
+SELECT YEAR(HireDate) FROM Employees; -- MySQL
+```
+
+---
+
+### **157. Write a query to return rows where a column contains a substring.**  
+```sql
+SELECT * FROM Employees WHERE Name LIKE '%John%';
+```
+
+---
+
+### **158. How do you check if a table is empty?**  
+```sql
+SELECT COUNT(*) FROM Employees;
+```
+
+---
+
+### **159. What is the `CAST` function?**  
+Converts data types.  
+```sql
+SELECT CAST(Salary AS CHAR) FROM Employees;
+```
+
+---
+
+### **160. Write a query to create an index on multiple columns.**  
+```sql
+CREATE INDEX idx_name ON Employees (DepartmentID, Salary);
+```
+
+---
+
+
+### **161. How do you check the size of a database?**  
+```sql
+SELECT table_schema AS DatabaseName, SUM(data_length + index_length) AS SizeInBytes 
+FROM information_schema.TABLES 
+GROUP BY table_schema;
+```
+
+---
+
+### **162. What is a recursive CTE?**  
+A Common Table Expression that refers to itself.  
+```sql
+WITH RECURSIVE CTE AS (
+    SELECT 1 AS Number
+    UNION ALL
+    SELECT Number + 1 FROM CTE WHERE Number < 10
+)
+SELECT * FROM CTE;
+```
+
+---
+
+### **163. How do you drop a column with constraints?**  
+```sql
+ALTER TABLE Employees DROP COLUMN Name CASCADE;
+```
+
+---
+
+### **164. Write a query to find employees whose names end with 'e'.**  
+```sql
+SELECT * FROM Employees WHERE Name LIKE '%e';
+```
+
+---
+
+### **165. How do you fetch the current time in SQL?**  
+```sql
+SELECT CURRENT_TIME; -- MySQL
+```
+
+---
+
+### **166. Write a query to fetch duplicate salaries.**  
+```sql
+SELECT Salary, COUNT(*) FROM Employees GROUP BY Salary HAVING COUNT(*) > 1;
+```
+
+---
+
+### **167. What is an updatable view?**  
+A view that allows `INSERT`, `UPDATE`, or `DELETE` operations if it meets certain conditions.
+
+---
+
+### **168. Write a query to delete all rows from a table without logging.**  
+```sql
+TRUNCATE TABLE Employees;
+```
+
+---
+
+### **169. How do you fetch the last day of the current month?**  
+```sql
+SELECT LAST_DAY(CURDATE()); -- MySQL
+```
+
+---
+
+### **170. What is the `UUID()` function?**  
+Generates a unique identifier.  
+```sql
+SELECT UUID(); -- MySQL
+```
+
+---
+
+### **171. Write a query to remove leading and trailing spaces.**  
+```sql
+SELECT TRIM('   Hello   '); -- MySQL
+```
+
+---
+
+### **172. How do you fetch the maximum value of a column?**  
+```sql
+SELECT MAX(Salary) FROM Employees;
+```
+
+---
+
+### **173. Write a query to fetch all employees except the lowest salary.**  
+```sql
+SELECT * FROM Employees WHERE Salary > (SELECT MIN(Salary) FROM Employees);
+```
+
+---
+
+### **174. What is the difference between `FLOAT` and `DECIMAL`?**  
+- **FLOAT:** Approximate numeric values.  
+- **DECIMAL:** Exact numeric values.
+
+---
+
+### **175. Write a query to calculate the average salary by department.**  
+```sql
+SELECT DepartmentID, AVG(Salary) FROM Employees GROUP BY DepartmentID;
+```
+
+---
+
+### **176. How do you fetch non-matching records between two tables?**  
+```sql
+SELECT * FROM TableA A LEFT JOIN TableB B ON A.ID = B.ID WHERE B.ID IS NULL;
+```
+
+---
+
+### **177. Write a query to drop a materialized view.**  
+```sql
+DROP MATERIALIZED VIEW ViewName;
+```
+
+---
+
+### **178. How do you copy data from one table to another?**  
+```sql
+INSERT INTO Table2 SELECT * FROM Table1;
+```
+
+---
+
+### **179. What is the `DECODE()` function?**  
+Performs conditional queries, similar to `CASE`.  
+```sql
+SELECT DECODE(Salary, 50000, 'Low', 100000, 'High', 'Average') FROM Employees;
+```
+
+---
+
+### **180. Write a query to create a trigger for auditing changes.**  
+```sql
+CREATE TRIGGER AuditTrigger AFTER UPDATE ON Employees
+FOR EACH ROW INSERT INTO AuditLog (EmployeeID, OldSalary, NewSalary) VALUES (OLD.ID, OLD.Salary, NEW.Salary);
+```
+
+---
+
+### **181. How do you check foreign key constraints in MySQL?**  
+```sql
+SELECT * FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS;
+```
+
+---
+
+### **182. Write a query to find all employees with salaries greater than the average salary.**  
+```sql
+SELECT * FROM Employees WHERE Salary > (SELECT AVG(Salary) FROM Employees);
+```
+
+---
+
+### **183. What is a stored-generated column?**  
+A column whose value is computed based on other columns.  
+```sql
+CREATE TABLE Test (A INT, B INT, C INT AS (A + B));
+```
+
+---
+
+### **184. Write a query to fetch the nth highest salary using a CTE.**  
+```sql
+WITH CTE AS (
+    SELECT Salary, ROW_NUMBER() OVER (ORDER BY Salary DESC) AS RowNum
+    FROM Employees
+)
+SELECT Salary FROM CTE WHERE RowNum = N;
+```
+
+---
+
+### **185. How do you fetch all records that do not contain 'John'?**  
+```sql
+SELECT * FROM Employees WHERE Name NOT LIKE '%John%';
+```
+
+---
+
+### **186. Write a query to find employees hired after 2020.**  
+```sql
+SELECT * FROM Employees WHERE HireDate > '2020-12-31';
+```
+
+---
+
+### **187. What is the difference between `ISNULL()` and `NULLIF()`?**  
+- **`ISNULL()`**: Replaces `NULL` with a value.  
+- **`NULLIF()`**: Returns `NULL` if two values are equal.
+
+---
+
+### **188. Write a query to drop all rows from a table but keep the structure.**  
+```sql
+TRUNCATE TABLE Employees;
+```
+
+---
+
+### **189. How do you change the default value of a column?**  
+```sql
+ALTER TABLE Employees ALTER COLUMN Status SET DEFAULT 'Active';
+```
+
+---
+
+### **190. Write a query to convert a number to a string.**  
+```sql
+SELECT CAST(Salary AS CHAR) FROM Employees; -- MySQL
+```
+
+---
+
+### **191. How do you find the length of a column value?**  
+```sql
+SELECT LENGTH(Name) AS Length FROM Employees; -- MySQL
+```
+
+---
+
+### **192. Write a query to get the name and the highest salary in the company.**  
+```sql
+SELECT Name, Salary FROM Employees WHERE Salary = (SELECT MAX(Salary) FROM Employees);
+```
+
+---
+
+### **193. What is a Cartesian product in SQL?**  
+A result of a `CROSS JOIN`, combining all rows from two tables.
+
+---
+
+### **194. Write a query to find employees with salaries in a given list.**  
+```sql
+SELECT * FROM Employees WHERE Salary IN (50000, 75000, 100000);
+```
+
+---
+
+### **195. How do you fetch records where a column has special characters?**  
+```sql
+SELECT * FROM Employees WHERE Name LIKE '%[^a-zA-Z0-9]%';
+```
+
+---
+
+### **196. Write a query to find the employee with the longest name.**  
+```sql
+SELECT Name FROM Employees ORDER BY LENGTH(Name) DESC LIMIT 1;
+```
+
+---
+
+### **197. How do you delete all rows where a column is NULL?**  
+```sql
+DELETE FROM Employees WHERE ColumnName IS NULL;
+```
+
+---
+
+### **198. Write a query to calculate the percentage of total salary for each employee.**  
+```sql
+SELECT Name, (Salary / (SELECT SUM(Salary) FROM Employees)) * 100 AS SalaryPercentage FROM Employees;
+```
+
+---
+
+### **199. How do you rename a constraint in SQL?**  
+```sql
+ALTER TABLE Employees RENAME CONSTRAINT old_constraint_name TO new_constraint_name; -- PostgreSQL
+```
+
+---
+
+### **200. Write a query to list employees grouped by their first letter of the name.**  
+```sql
+SELECT LEFT(Name, 1) AS Initial, COUNT(*) AS EmployeeCount FROM Employees GROUP BY LEFT(Name, 1);
+```
+
+
+
+
+
+
+
+
+
+---
+---
+---
+---
+
 
 
 # Some Interview question queries
